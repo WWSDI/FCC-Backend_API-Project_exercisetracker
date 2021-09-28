@@ -3,19 +3,37 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const { User, Exercise } = require("./models");
+const mongoose = require('mongoose')
+const fs = require('fs')
+const {stringify} = require('flatted')
+const bodyParser = require('body-parser')
 
 app.use(cors());
 app.use(express.static("public"));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 app.get("/", (req, res) => {
+  fs.writeFile('./requestObject_root.js', stringify(req), (err) => {
+    if(err) console.log(err)
+  }) 
   res.sendFile(__dirname + "/views/index.html");
 });
 
 // 3 routes
 app.post("/api/users", async (req, res) => {
-  console.log("🌸", req.body);
-  const name = req.body;
-  await User.create({ name });
-  res.send(await User.find({ name }));
+  // 把数据输出至文件
+  fs.writeFile('./requestObject_user.js', stringify(req), (err) => {
+    if(err) console.log(err)
+  })
+  fs.writeFile('./requestObject_user_reqbody.js', stringify(req.body), (err) => {
+    if(err) console.log(err)
+  })
+
+  const {username} = req.body;
+  console.log("🌸 req.body:", req.body);
+  // Model.create firstly create a new user object, then Model.save it into the database, then return it. So you don't have to look it up again in the database for the object to return to the client.
+  const user = await User.create({ username });
+  res.send(user);
 });
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
@@ -23,7 +41,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   let { description, duration, date } = req.body;
 
   await Exercise.create({ userId, description, duration, date });
-  let { userId, description, duration, date } = await Exercise.findOne({
+  const foundExercise = await Exercise.findOne({
     userId,
     description,
   });
