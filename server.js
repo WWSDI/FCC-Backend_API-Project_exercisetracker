@@ -46,7 +46,7 @@ app.get("/api/users/:_id/exercises", async (req, res) => {
 });
 
 //mongoose connect to mongodb atlas
-mongoose.connect('mongodb+srv://shawnsufcc:FiRv6w3nVywgFz6@cluster0.tjas7.mongodb.net/test');
+mongoose.connect('mongodb+srv://shawnsufcc:FiRv6w3nVywgFz6@cluster0.tjas7.mongodb.net/fccExercise');
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);
