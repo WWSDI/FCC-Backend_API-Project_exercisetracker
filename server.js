@@ -4,7 +4,6 @@ const cors = require("cors");
 require("dotenv").config();
 const { User, Exercise } = require("./models");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const { stringify } = require("flatted");
 const bodyParser = require("body-parser");
 const url = require("url");
@@ -28,7 +27,7 @@ const formatDate = date => new Date("1998-01-29T00:00:00.000Z").toString().subst
 // ✅
 app.post("/api/users", async (req, res) => {
   const { username } = req.body;
-  // Model.create firstly create a new user object, then Model.save it into the database, then return it. So you don't have to look it up again in the database for the object to return to the client.
+  // Model.create firstly creates a new user object, then Model.save it into the database, then return it. So you don't have to look it up again in the database for the object to return to the client.
   const user = await User.create({ username });
   res.send(user);
 });
@@ -51,8 +50,6 @@ app.get(
   // ❗❗️❗️️query string is NOT part of route path! So don't put it in there!
   "/api/users/:_id/logs",
   async (req, res) => {
-    // console.log("🌸 req.url", req.url);
-    // console.log("🌸 req.params:", req.params);
     // extracting query info
     const parsedUrl = url.parse(req.url);
     // ❗️if limit is undefined, limit() will simply return all found documents
@@ -91,5 +88,3 @@ mongoose.connect(
 const listener = app.listen(process.env.PORT || 3005, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
-
-// module.exports = app
