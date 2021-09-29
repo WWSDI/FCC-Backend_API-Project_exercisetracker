@@ -43,7 +43,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     duration,
     date,
   });
-  const { username } = await User.findById(userId);
+  const {username} = await User.findById(userId);
   res.send({ username, _id: userId, description, duration, date: formatDate(date) });
 });
 // ✅
